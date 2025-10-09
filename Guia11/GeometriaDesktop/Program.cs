@@ -1,29 +1,28 @@
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using GeometriaDesktop;
 using GeometriaModels.DALs;
 using GeometriaModels.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
-namespace GeometriaDesktop
+//host es el contenedor principal de la aplicación.
+var host = Host.CreateDefaultBuilder()
+.ConfigureServices((context, services) =>
 {
-    internal static class Program
-    {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+    #region Registro de DALs
+    services.AddSingleton<IBaseDAL, ListFigurasDal>();
+    #endregion
 
-            var host = Host.CreateDefaultBuilder().ConfigureServices((context, services) =>
-            {
-                services.AddSingleton<IBaseDAL, ListFigurasDal>();
-                services.AddSingleton<FiguraService>();
-                services.AddTransient<Form1>();
-            }).Build();
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
-        }
-    }
-}
+    #region Registro de services.
+    services.AddSingleton <FiguraService>();
+    #endregion
+
+
+    #region Registro de las vistas
+    services.AddTransient<Form1>();
+    #endregion
+})
+.Build();
+
+ApplicationConfiguration.Initialize();
+var form = host.Services.GetRequiredService<Form1>();
+Application.Run(form);

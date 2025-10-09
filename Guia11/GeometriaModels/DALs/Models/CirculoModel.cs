@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace GeometriaModels.Models
 {
-    public class CirculoModel : FiguraModels
+    public class CirculoModel : FiguraModel
     {
         public double? Radio { get; set; }
-        public CirculoModel(int id, double area, double radio) : base(id, area)
-        {
-            this.Radio = radio;
-        }
+    
     }
 }

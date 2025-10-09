@@ -5,9 +5,9 @@ namespace GeometriaModels.DALs
     public class ListFigurasDal : IBaseDAL
     {
 
-        List<FiguraModels> listFiguras = new List<FiguraModels>();
+        List<FiguraModel> listFiguras = new List<FiguraModel>();
 
-        public FiguraModels Add(FiguraModels figura)
+        public FiguraModel Add(FiguraModel figura)
         {
             if (figura != null)
             {
@@ -25,7 +25,7 @@ namespace GeometriaModels.DALs
             }
         }
 
-        public List<FiguraModels> GetAll()
+        public List<FiguraModel> GetAll()
         {
             if (listFiguras.Count > 0)
             {
@@ -34,7 +34,7 @@ namespace GeometriaModels.DALs
             return null;
         }
 
-        public FiguraModels GetById(int? id)
+        public FiguraModel GetById(int? id)
         {
             var figura =  listFiguras.Where(f  => f.Id == id).FirstOrDefault();
 
@@ -45,7 +45,7 @@ namespace GeometriaModels.DALs
             return null;
         }
 
-        public FiguraModels Save(FiguraModels entidad)
+        public FiguraModel Save(FiguraModel entidad)
         {
             var f = GetById(entidad.Id);
             if (f == null) return null;

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace GeometriaModels.Models
 {
-    public class RectanguloModel : FiguraModels
+    public class RectanguloModel : FiguraModel
     {
         public double? Ancho { get; set; }
         public double? Largo { get; set; }
-        public RectanguloModel(int id, double area ,double ancho,double largo) : base(id, area)
+
+        public RectanguloModel()
         {
-            this.Ancho = ancho;
-            this.Largo = largo;
+            
         }
     }
 }
