@@ -61,6 +61,7 @@
             radioButton1.TabStop = true;
             radioButton1.Text = "Rectangulo";
             radioButton1.UseVisualStyleBackColor = true;
+            radioButton1.CheckedChanged += radioButton1_CheckedChanged;
             // 
             // radioButton2
             // 
@@ -187,6 +188,7 @@
             groupBox2.TabIndex = 0;
             groupBox2.TabStop = false;
             groupBox2.Text = "Tipo de Figura";
+            groupBox2.Enter += groupBox2_Enter;
             // 
             // groupBox3
             // 
@@ -194,18 +196,19 @@
             groupBox3.Controls.Add(lvwFiguras);
             groupBox3.Location = new Point(12, 187);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(366, 257);
+            groupBox3.Size = new Size(366, 267);
             groupBox3.TabIndex = 3;
             groupBox3.TabStop = false;
             groupBox3.Text = "Listado de Figuras";
             // 
             // lvwFiguras
             // 
-            lvwFiguras.Location = new Point(15, 33);
+            lvwFiguras.Location = new Point(6, 23);
             lvwFiguras.Name = "lvwFiguras";
-            lvwFiguras.Size = new Size(340, 138);
+            lvwFiguras.Size = new Size(351, 222);
             lvwFiguras.TabIndex = 0;
             lvwFiguras.UseCompatibleStateImageBehavior = false;
+            lvwFiguras.SelectedIndexChanged += lvwFiguras_SelectedIndexChanged;
             // 
             // btnListado
             // 
@@ -215,6 +218,7 @@
             btnListado.TabIndex = 4;
             btnListado.Text = "Actualizar Listado";
             btnListado.UseVisualStyleBackColor = true;
+            btnListado.Click += btnListado_Click;
             // 
             // btnRegistro
             // 

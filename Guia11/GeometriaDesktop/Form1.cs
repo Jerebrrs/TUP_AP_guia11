@@ -1,9 +1,7 @@
-using GeometriaModels.DALs;
 using GeometriaModels.Models;
 using GeometriaModels.Services;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
-using static System.Windows.Forms.MonthCalendar;
+
 
 namespace GeometriaDesktop
 {
@@ -14,7 +12,12 @@ namespace GeometriaDesktop
         {
             _figurasService = figuraService;
             InitializeComponent();
-         
+
+            tbRadio.Enabled = false;
+            tbArea.Enabled = false;
+            tbAncho.Enabled = false;
+            tbAlto.Enabled = false;
+            lvwInicializar();
         }
 
 
@@ -26,51 +29,45 @@ namespace GeometriaDesktop
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            tbRadio.Enabled = false;
-            tbArea.Enabled = false;
-            tbAncho.Enabled = false;
-            tbAlto.Enabled = false;
+      
         }
 
         private void btn_Click(object sender, EventArgs e)
         {
-            Random rnd = new Random();
-            int idi = rnd.Next(1,100);
-
-            bool rRecta = radioButton1.Checked;
-
-            if (rRecta== true)
-            {
-                tbArea.Enabled = true;
-                tbAncho.Enabled = true;
-                tbAlto.Enabled = true;
-            }
 
             FiguraModel figuraModels = null;
-            if (rRecta == true)
+            if (radioButton1.Checked)
             {
-            
+
                 double area = Convert.ToDouble(tbArea.Text);
                 double largo = Convert.ToDouble(tbAlto.Text);
                 double ancho = Convert.ToDouble(tbAncho.Text);
 
-                figuraModels = new RectanguloModel { Id = idi, Area = area, Largo = largo, Ancho = ancho };
+                figuraModels = new RectanguloModel { Area = area, Largo = largo, Ancho = ancho };
 
             }
-            else
+            else if (radioButton2.Checked)
             {
 
-                tbArea.Enabled = true;
-              
-                tbRadio.Enabled = true;
+
                 double area = Convert.ToDouble(tbArea.Text);
                 double redio = Convert.ToDouble(tbRadio.Text);
-                figuraModels = new CirculoModel { Id = idi, Area = area, Radio= redio };
+                figuraModels = new CirculoModel { Area = area, Radio = redio };
             }
 
-            _figurasService.AddFigura(figuraModels);
+            if (figuraModels != null)
+            {
+                _figurasService.AddFigura(figuraModels);
+            }
 
-           
+            btnListado.PerformClick();
+            //btnLimpiar.PerformClick();
+
+            tbRadio.Clear();
+            tbArea.Clear();
+            tbAncho.Clear();
+            tbAlto.Clear();
+
         }
         #region lvw redibujado
         public void lvwInicializar()
@@ -80,7 +77,7 @@ namespace GeometriaDesktop
             lvwFiguras.HideSelection = false;
             lvwFiguras.OwnerDraw = true;
             lvwFiguras.TileSize = new Size(300, 100);
-            lvwFiguras.BackColor = Color.WhiteSmoke;
+            lvwFiguras.BackColor = Color.Red;
             lvwFiguras.BorderStyle = BorderStyle.None;
             lvwFiguras.DrawItem += lvwFiguras_DrawItem;
             lvwFiguras.SelectedIndexChanged += lvwFiguras_SelectedIndexChanged;
@@ -146,5 +143,97 @@ namespace GeometriaDesktop
             lvwFiguras.Invalidate();
         }
         #endregion
+
+        private void btnListado_Click(object sender, EventArgs e)
+        {
+            lvwFiguras.Items.Clear();
+
+            foreach (var figura in _figurasService.GetAll())
+            {
+                var item = new ListViewItem();
+                if (figura is RectanguloModel r)
+                {
+                    item = new ListViewItem(new string[]
+                    {
+                        $"Rectangulo: #{r.Id} Area: #{r.Area} ancho: #{r.Ancho}",
+                        $"Area: #{r.Area}",$"ancho: #{r.Ancho}",
+
+                    });
+                }
+                else if (figura is CirculoModel c)
+                {
+                    item = new ListViewItem(new string[]
+                 {
+                    $"Circulo: #{c.Id}",
+                    $"Area: {c.Area:f2}",
+                    $"Radio: {c.Radio:f2}"
+                 });
+                }
+                item.Tag = figura;
+                lvwFiguras.Items.Add(item);
+            }
+        }
+
+        private void lvwFiguras_SelectedIndexChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (e.IsSelected)
+            {
+                var figuraSelected = e.Item.Tag as FiguraModel;
+
+                if (figuraSelected != null)
+                {
+                    tbAncho.Clear();
+                    tbAlto.Clear();
+                    tbRadio.Clear();
+                    radioButton1.Enabled = false;
+                    radioButton2.Enabled = false;
+
+                    tbArea.Text = $"{figuraSelected.Area:f2}";
+
+                    if (figuraSelected is RectanguloModel r)
+                    {
+                        radioButton1.Checked = true;
+                        tbAncho.Text = $"{r.Ancho:f2}";
+                        tbAlto.Text = $"{r.Largo:f2}";
+
+                        tbAncho.Enabled = true;
+                        tbAlto.Enabled = true;
+                        tbRadio.Enabled = false;
+                    }
+                    else if (figuraSelected is CirculoModel c)
+                    {
+                        radioButton2.Checked = true;
+                        tbRadio.Text = $"{c.Radio:f2}";
+
+                        tbAncho.Enabled = false;
+                        tbAlto.Enabled = false;
+                        tbRadio.Enabled = true;
+                    }
+                }
+            }
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                tbAlto.Enabled = true;
+                tbAncho.Enabled = true;
+                tbArea.Enabled = true;
+                tbRadio.Enabled = false;
+            }
+            else if (radioButton2.Checked)
+            {
+                tbAlto.Enabled = false;
+                tbAncho.Enabled = false;
+                tbArea.Enabled = true;
+                tbRadio.Enabled = true;
+            }
+        }
     }
 }
